@@ -1,0 +1,63 @@
+[
+  {
+    "id": "Pos_Fun_0001",
+    "input": "oyaata kohomadha?",
+    "expected": "ඔයාට කොහොමද?",
+    "result": "PASS"
+  },
+  {
+    "id": "Pos_Fun_0002",
+    "input": "mama gedhara yanawa",
+    "expected": "මම ගෙදර යනවා",
+    "result": "PASS"
+  },
+  {
+    "id": "Pos_Fun_0003",
+    "input": "subha dhavasak",
+    "expected": "සුභ දවසක්",
+    "result": "PASS"
+  },
+  {
+    "id": "Pos_Fun_0004",
+    "input": "mata udhavvak karanna puluvandha?",
+    "expected": "මට උදව්වක් කරන්න පුළුවන්ද?",
+    "result": "PASS"
+  },
+  {
+    "id": "Pos_Fun_0005",
+    "input": "api heta gedhara yanavaa",
+    "expected": "අපි හෙට ගෙදර යනවා",
+    "result": "PASS"
+  },
+
+  {
+    "id": "Neg_Fun_0006",
+    "input": "machan mata meeting eke zoom link eka evanna plz",
+    "expected": "මචන් මට meeting එකේ zoom link එක එවන්න plz",
+    "result": "FAIL"
+  },
+  {
+    "id": "Neg_Fun_0007",
+    "input": "thx oyaa help kalaata",
+    "expected": "thanks ඔයා help කළාට",
+    "result": "FAIL"
+  },
+  {
+    "id": "Neg_Fun_0008",
+    "input": "mama gedharayanavaa",
+    "expected": "මම ගෙදර යනවා",
+    "result": "FAIL"
+  },
+  {
+    "id": "Neg_Fun_0009",
+    "input": "oya enne da?",
+    "expected": "ඔයා එන්නේද?",
+    "result": "FAIL"
+  },
+  {
+    "id": "Neg_Fun_0010",
+    "input": "api tomorrow office yamu",
+    "expected": "අපි හෙට office යමු",
+    "result": "FAIL"
+  }
+]
