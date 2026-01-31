@@ -302,4 +302,17 @@ https://github.com/Lochana02/IT23699458
 
 **Last Updated**: January 31, 2026  
 **Application Tested**: Singlish ↔ English Translator (swifttranslator.com)  
-**Test Framework Version**: Playwright v1.58.0+ 
+**Test Framework Version**: Playwright v1.58.0+
+
+## License
+
+This project is part of BSc (Hons) in Information Technology - Year 3, Assignment 1 (IT3040 - ITPM).
+
+ISC License - See LICENSE file for details.
+
+## Repository Access
+
+This repository is **publicly accessible** at:
+https://github.com/Lochana02/IT23699458
+
+**Status**: ✅ Public Repository
