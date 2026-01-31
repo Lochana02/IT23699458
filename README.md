@@ -142,7 +142,7 @@ The report displays:
 - 📸 Screenshots and page snapshots
 - ⏱️ Test duration breakdown
 - 📋 Step-by-step test execution logs
-- 🎥 Video recordings (if enabled)
+
 
 ## Test Implementation Details
 
