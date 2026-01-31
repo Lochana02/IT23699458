@@ -1,202 +1,130 @@
-# Singlish to Sinhala Translator - Playwright Test Suite
+# ✍️ Singlish to Sinhala Automation Suite
 
-## Overview
+## Project Overview
 
-This project contains an automated test suite for the **Singlish ↔ English Translator** application, specifically focusing on testing the Singlish-to-Sinhala transliteration functionality using Playwright.
+This is a robust automation framework developed with **Playwright** and **TypeScript**. Its primary goal is to perform high-accuracy validation of phonetic Singlish-to-Sinhala translations on the [Swift Translator](https://www.swifttranslator.com/) web platform.
 
-The application allows users to input text in Singlish (phonetic Sinhala) and automatically converts it to Sinhala Unicode characters in real-time.
+## Why This Project is Unique
+
+Automating real-time translation tools is challenging because results are generated dynamically. This project overcomes these challenges using advanced automation techniques:
+
+### 1. **Mimic Human Behavior**
+Standard automation tools enter text instantly (`page.fill()`), which often fails to trigger translation engines. We use `.type()` with a **150ms delay** per character to simulate a real user, ensuring the website's JavaScript properly converts the text.
+
+```typescript
+await inputBox.type(data.input, { delay: 150 });
+```
+
+### 2. **Regex-Based Smart Waiting**
+To prevent capturing "English" text before it turns into "Sinhala," we implemented a custom **Unicode Regex assertion**. The test specifically waits until it detects Sinhala characters (`/[\u0D80-\u0DFF]/`) in the output box.
+
+```typescript
+await expect(outputContainer).toContainText(/[\u0D80-\u0DFF]/, { timeout: 20000 });
+```
+
+### 3. **Data-Driven Scalability**
+The entire test suite is driven by a `testData.json` file. This allows adding dozens of new test cases (Positive & Negative) without changing a single line of code.
+
+## Technical Implementation
+
+- **Language**: TypeScript
+- **Framework**: Playwright v1.58.0+
+- **Node.js**: LTS version
+- **Test Data Format**: JSON
+
+### Key Logic
+
+**Sequential Input Simulation:**
+```typescript
+await inputBox.type(data.input, { delay: 150 });
+```
+Delays 150ms between each character to trigger real-time translation engine.
+
+**Unicode Detection:**
+```typescript
+await expect(outputContainer).toContainText(/[\u0D80-\u0DFF]/, { timeout: 20000 });
+```
+Waits specifically for Sinhala Unicode characters (U+0D80 to U+0DFF range).
+
+**Robust Assertion:**
+```typescript
+expect(actualOutput).toContain(data.expected.trim());
+```
+Uses substring matching to account for transliteration variations.
 
 ## Project Structure
 
 ```
 .
 ├── tests/
-│   └── singlish_test.spec.ts          # Main test file with all test cases
-├── testData.json                       # Test data with positive and negative test cases
-├── playwright.config.ts                # Playwright configuration
-├── playwright-report/                  # HTML test report
-├── test-results/                       # Test execution results and snapshots
-├── package.json                        # Project dependencies
+│   └── singlish_test.spec.ts          # Core test script with intelligent sync logic
+├── testData.json                       # External database for 30+ phonetic scenarios
+├── playwright.config.ts                # Configured for Headed Mode, Screenshots, Tracing
 ├── .github/workflows/
-│   └── playwright.yml                  # CI/CD workflow for GitHub Actions
-└── README.md                           # This file
+│   └── playwright.yml                  # CI/CD automation with GitHub Actions
+└── README.md                           # Documentation
 ```
 
-## Technology Stack
+## Test Coverage
 
-- **Test Framework**: Playwright (v1.58.0+)
-- **Language**: TypeScript
-- **Node.js**: LTS version
-- **CI/CD**: GitHub Actions
-- **Test Data Format**: JSON
+- **Total Test Cases**: 34+
+- **Positive Test Cases**: 30+
+- **Test Categories**: 
+  - Daily greetings and conversations
+  - Meeting arrangements
+  - Travel logistics
+  - Health & medical inquiries
+  - Educational topics
+  - Emotional narratives
+  - Weather information
+  - Mixed language scenarios
 
-## Test Data Overview
+### Input Types
 
-The project includes **34+ test cases** covering:
-- **30+ Positive Test Cases**: Valid Singlish inputs with expected Sinhala outputs
-- **4+ UI Test Cases**: User interface and interaction testing
-- **Input Types**: S (Short), M (Medium), L (Long) paragraphs
+| Type | Description | Example |
+|------|-------------|---------|
+| **S** (Short) | Daily greetings, simple phrases | `api adha gedhara yamudha?` |
+| **M** (Medium) | Sentences with mixed language | `Api adha havasata topic ekak select...` |
+| **L** (Long) | Multi-sentence paragraphs | `nishini rata yanne adha nisaa api...` |
 
-### Test Data Structure
-
-Each test case contains:
-- **TC_ID**: Unique test identifier (e.g., `Pos_Fun_0001`, `Pos_UI_001`)
-- **Test_case_name**: Descriptive name of the test scenario
-- **Input_length_type**: S/M/L for Short/Medium/Long inputs
-- **Input**: Singlish text to be converted
-- **Expected_output**: Expected Sinhala Unicode output
-
-### Sample Test Cases
-
-| TC_ID | Input | Expected Output | Type |
-|-------|-------|-----------------|------|
-| Pos_Fun_0001 | `api adha gedhara yamudha?` | `අපි අද ගෙදර යමුද?` | Daily Greeting |
-| Pos_Fun_0002 | `Api adha havasata topic ekak select...` | `අපි අද හවසට topic එකක්...` | Meeting Arrangement |
-| Pos_Fun_0007 | `mama pebaravari 02 train ekata yanavaa...` | `මම පෙබරවරි 02 train එකට යනවා...` | Travel Details |
-| Pos_Fun_0027 | `heta dhivayinee godak paLaath valata...` | `හෙට දිවයිනේ ගොඩක් පළාත්...` | Weather Warning |
-| Pos_Fun_0034 | `nishini rata yanne adha nisaa api...` | `නිශිනි රට යන්නෙ අද නිසා අපි...` | Long Narrative |
-
-### Test Categories
-
-**Positive Test Cases Cover:**
-- Daily greetings and casual conversations
-- Meeting arrangements and business communication
-- Festival and holiday planning
-- Health and medical inquiries
-- Educational and exam-related topics
-- Travel logistics and transportation
-- Weather and geographical information
-- Emotional narratives and personal experiences
-- Formal instructions and guidelines
-- Mixed language scenarios with English terms
-
-## Setup Instructions
+## Getting Started
 
 ### Prerequisites
+- Node.js (LTS)
+- npm (v7+)
 
-- Node.js (LTS version)
-- npm (v7 or higher)
-- Git
+### Quick Setup
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Lochana02/IT23699458.git
-   cd IT23699458
-   ```
-
-2. **Install dependencies**
+1. **Install Dependencies**
    ```bash
    npm install
    ```
 
-3. **Install Playwright browsers**
+2. **Execute Tests**
    ```bash
-   npx playwright install --with-deps
+   npx playwright test --project=chromium
    ```
 
-## Running Tests
+3. **Generate Reports**
+   ```bash
+   npx playwright show-report
+   ```
 
-### Run All Tests
-```bash
-npx playwright test
-```
+## Advanced Usage
 
 ### Run Tests in Headed Mode (see browser)
 ```bash
 npx playwright test --headed
 ```
 
-### Run Specific Test File
+### Debug Single Test
 ```bash
-npx playwright test tests/singlish_test.spec.ts
+npx playwright test -g "Pos_Fun_0001" --headed --debug
 ```
 
-### Run Tests in Debug Mode
+### Enable Detailed Logging
 ```bash
-npx playwright test --debug
-```
-
-### Run Tests on Specific Browser
-```bash
-npx playwright test --project=chromium
-```
-
-### Run Single Test Case
-```bash
-npx playwright test -g "Pos_Fun_0001"
-```
-
-## Test Report
-
-After running tests, an HTML report is automatically generated:
-
-```bash
-npx playwright show-report
-```
-
-The report displays:
-- ✅ Passed tests with execution time
-- ❌ Failed tests with error details
-- 📸 Screenshots and page snapshots
-- ⏱️ Test duration breakdown
-- 📋 Step-by-step test execution logs
-- 🎥 Video recordings (if enabled)
-
-## Test Implementation Details
-
-### Test Flow
-
-1. **Navigate** to the Singlish translator application
-2. **Locate** the input textbox using playwright locators
-3. **Type** Singlish text with 150ms delay (triggers real-time transliteration)
-4. **Wait** for Sinhala Unicode characters to appear (30s timeout)
-5. **Verify** the output contains expected Sinhala text
-6. **Assert** using robust substring matching for transliteration variations
-
-### Key Locators
-
-```typescript
-// Input box
-const inputBox = page.getByPlaceholder('Input Your Singlish Text Here.');
-
-// Output container (Sinhala section)
-const outputContainer = page
-  .getByText('Sinhala', { exact: true })
-  .locator('xpath=ancestor::div[contains(@class,"grid")]')
-  .locator('div.w-full.h-80.whitespace-pre-wrap')
-  .first();
-```
-
-### Assertion Strategy
-
-The tests use **robust substring matching** that checks if the output contains the expected text, accounting for transliteration system variations and unicode rendering differences:
-
-```typescript
-expect(actualOutput).toContain(data.expected.trim());
-```
-
-## Continuous Integration
-
-The project is configured with **GitHub Actions** (`.github/workflows/playwright.yml`) to:
-
-- ✅ Automatically run tests on push and pull requests
-- ✅ Test on Ubuntu latest environment
-- ✅ Generate and upload HTML reports as artifacts
-- ✅ Retain reports for 30 days
-- ✅ Run tests in parallel for faster execution
-
-### GitHub Actions Workflow Stages
-
-```yaml
-1. Checkout code
-2. Setup Node.js environment
-3. Install dependencies
-4. Install Playwright browsers
-5. Run tests
-6. Upload HTML report as artifact
-7. Archive test results
+DEBUG=pw:api npx playwright test
 ```
 
 ## Configuration
@@ -204,63 +132,34 @@ The project is configured with **GitHub Actions** (`.github/workflows/playwright
 Edit `playwright.config.ts` to customize:
 
 ```typescript
-// Test timeout (default: 30s per test)
+// Test timeout
 timeout: 30000,
 
-// Retries on CI (default: 2 attempts)
+// Retries on CI
 retries: process.env.CI ? 2 : 0,
 
-// Parallel workers
-workers: process.env.CI ? 1 : undefined,
-
-// Base URL for testing
+// Base URL
 use: {
   baseURL: 'https://swifttranslator.com',
 }
 ```
 
-## Troubleshooting
+## Continuous Integration
 
-### Common Issues
+Automated testing via **GitHub Actions**:
+- Runs on every push and pull request
+- Tests on Ubuntu latest
+- Generates HTML reports
+- Uploads artifacts for 30 days
+
+## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Tests timeout | Increase timeout in `playwright.config.ts` or check website availability |
-| Selectors not found | Run tests in headed mode: `npx playwright test --headed --debug` |
-| Unicode characters not appearing | Verify browser language settings and check page rendering |
-| Network errors | Ensure stable internet connection to the application URL |
-| Permission denied | Run with admin privileges or check file permissions |
-
-### Enable Detailed Logging
-
-```bash
-DEBUG=pw:api npx playwright test
-```
-
-### Run Single Test for Debugging
-
-```bash
-npx playwright test tests/singlish_test.spec.ts -g "Pos_Fun_0001" --headed --debug
-```
-
-## Test Statistics
-
-- **Total Test Cases**: 34+
-- **Positive Test Cases**: 30+
-- **UI Test Cases**: 4+
-- **Input Categories**: 
-  - Short (S): Daily greetings, simple phrases
-  - Medium (M): Sentences with mixed language
-  - Long (L): Multi-sentence paragraphs
-- **Browser Coverage**: Chromium, Firefox, WebKit
-- **Test Domains Covered**: 15+ different scenarios
-
-## Application Under Test
-
-- **Name**: Singlish to Sinhala Translator
-- **URL**: https://swifttranslator.com
-- **Purpose**: Real-time transliteration from Singlish (phonetic Sinhala) to Sinhala Unicode
-- **Features Tested**: Input conversion, real-time processing, Unicode output validation
+| Tests timeout | Increase timeout or check site availability |
+| Selectors not found | Run with `--headed --debug` |
+| Unicode not appearing | Verify browser language settings |
+| Network errors | Check internet connection |
 
 ## Dependencies
 
@@ -273,46 +172,24 @@ npx playwright test tests/singlish_test.spec.ts -g "Pos_Fun_0001" --headed --deb
 }
 ```
 
-## Documentation
+## Application Under Test
 
-- [Playwright Official Documentation](https://playwright.dev)
-- [Test Configuration Guide](https://playwright.dev/docs/test-configuration)
-- [Debugging Tests](https://playwright.dev/docs/debug)
-- [CI/CD Integration](https://playwright.dev/docs/ci)
-
-## Best Practices
-
-- ✅ Run tests regularly before committing code
-- ✅ Review HTML reports for failed tests
-- ✅ Keep test data updated with new scenarios
-- ✅ Use descriptive test case names
-- ✅ Maintain consistent assertion patterns
-- ✅ Document any new test additions
-
-
-## Author
-
-**IT23699458**
-
-## Repository
-
-https://github.com/Lochana02/IT23699458
-
----
-
-**Last Updated**: January 31, 2026  
-**Application Tested**: Singlish ↔ English Translator (swifttranslator.com)  
-**Test Framework Version**: Playwright v1.58.0+
+- **Name**: Singlish to Sinhala Translator
+- **URL**: https://www.swifttranslator.com
+- **Purpose**: Real-time phonetic-to-Unicode transliteration
 
 ## License
 
-This project is part of BSc (Hons) in Information Technology - Year 3, Assignment 1 (IT3040 - ITPM).
+ISC License - BSc (Hons) Information Technology, Year 3 (IT3040 - ITPM)
 
-ISC License - See LICENSE file for details.
+## Author
 
-## Repository Access
+IT23699458
 
-This repository is **publicly accessible** at:
-https://github.com/Lochana02/IT23699458
+## Repository
 
-**Status**: ✅ Public Repository
+https://github.com/Lochana02/IT23699458 ✅ **Public**
+
+---
+
+**Last Updated**: January 31, 2026
