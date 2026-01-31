@@ -127,6 +127,88 @@ npx playwright test -g "Pos_Fun_0001" --headed --debug
 DEBUG=pw:api npx playwright test
 ```
 
+### Run Tests on Specific Browser
+```bash
+npx playwright test --project=chromium
+```
+
+### Run Single Test Case
+```bash
+npx playwright test -g "Pos_Fun_0001"
+```
+
+## Test Report
+
+After running tests, an HTML report is automatically generated:
+
+```bash
+npx playwright show-report
+```
+
+The report displays:
+- ✅ Passed tests with execution time
+- ❌ Failed tests with error details
+- 📸 Screenshots and page snapshots
+- ⏱️ Test duration breakdown
+- 📋 Step-by-step test execution logs
+
+
+## Test Implementation Details
+
+### Test Flow
+
+1. **Navigate** to the Singlish translator application
+2. **Locate** the input textbox using playwright locators
+3. **Type** Singlish text with 150ms delay (triggers real-time transliteration)
+4. **Wait** for Sinhala Unicode characters to appear (30s timeout)
+5. **Verify** the output contains expected Sinhala text
+6. **Assert** using robust substring matching for transliteration variations
+
+### Key Locators
+
+```typescript
+// Input box
+const inputBox = page.getByPlaceholder('Input Your Singlish Text Here.');
+
+// Output container (Sinhala section)
+const outputContainer = page
+  .getByText('Sinhala', { exact: true })
+  .locator('xpath=ancestor::div[contains(@class,"grid")]')
+  .locator('div.w-full.h-80.whitespace-pre-wrap')
+  .first();
+```
+
+### Assertion Strategy
+
+The tests use **robust substring matching** that checks if the output contains the expected text, accounting for transliteration system variations and unicode rendering differences:
+
+```typescript
+expect(actualOutput).toContain(data.expected.trim());
+```
+
+## Continuous Integration
+
+The project is configured with **GitHub Actions** (`.github/workflows/playwright.yml`) to:
+
+- ✅ Automatically run tests on push and pull requests
+- ✅ Test on Ubuntu latest environment
+- ✅ Generate and upload HTML reports as artifacts
+- ✅ Retain reports for 30 days
+- ✅ Run tests in parallel for faster execution
+
+### GitHub Actions Workflow Stages
+
+```yaml
+1. Checkout code
+2. Setup Node.js environment
+3. Install dependencies
+4. Install Playwright browsers
+5. Run tests
+6. Upload HTML report as artifact
+7. Archive test results
+>>>>>>> 56fd099a676debf9aae2f6c971beb79c522cf457
+```
+
 ## Configuration
 
 Edit `playwright.config.ts` to customize:
